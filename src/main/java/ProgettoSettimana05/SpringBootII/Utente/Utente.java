@@ -30,7 +30,6 @@ public class Utente implements UserDetails {
 	@Column(nullable = false, unique = true)
 	private String email;
 	private String password;
-
 	public Utente(String nome, String cognome, String username, String email, String password) {
 
 		this.nome = nome;
@@ -54,7 +53,7 @@ public class Utente implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return this.email;
+		return this.username;
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import ProgettoSettimana05.SpringBootII.Dispositivo.NotFoundDispositivoException;
 import ProgettoSettimana05.SpringBootII.Utente.NotUtenteFoundException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +30,13 @@ public class ExceptionsHandler {
 
 	@ExceptionHandler(NotUtenteFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public ErrorsPayload handleNotFound(NotUtenteFoundException e) {
+	public ErrorsPayload handleNotFoundUtente(NotUtenteFoundException e) {
+		return new ErrorsPayload(e.getMessage(), new Date());
+	}
+
+	@ExceptionHandler(NotFoundDispositivoException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ErrorsPayload handleNotFoundDispositivo(NotFoundDispositivoException e) {
 		return new ErrorsPayload(e.getMessage(), new Date());
 	}
 
@@ -40,5 +47,14 @@ public class ExceptionsHandler {
 		e.printStackTrace();
 		return new ErrorsPayload("Errore generico, risolveremo il prima possibile", new Date());
 	}
+
+	@ExceptionHandler(DeleteUtenteImpossibileRelazioneDispositivoException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ErrorsPayload handleNoDelete(DeleteUtenteImpossibileRelazioneDispositivoException ex) {
+		log.error(ex.getMessage());
+		ex.printStackTrace();
+		return new ErrorsPayload(ex.getMessage(), new Date());
+	}
+
 
 }

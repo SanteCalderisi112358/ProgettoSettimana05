@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import ProgettoSettimana05.SpringBootII.Exception.DeleteUtenteImpossibileRelazioneDispositivoException;
+
 
 
 @RestController
@@ -45,7 +47,11 @@ public class UtenteController {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteUtente(@PathVariable UUID id) {
-		utenteSrv.findByIdAndDelete(id);
+		try {
+			utenteSrv.findByIdAndDelete(id);
+		} catch (DeleteUtenteImpossibileRelazioneDispositivoException ex) {
+			System.err.println(ex.getMessage());
+		}
 
 	}
 }

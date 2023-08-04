@@ -58,7 +58,12 @@ public class UtenteService {
 
 	public void findByIdAndDelete(UUID id) throws NotUtenteFoundException {
 		Utente found = this.findById(id);
-		utenteRepo.delete(found);
+		if (found != null) {
+			utenteRepo.delete(found);
+		} else {
+			throw new NotUtenteFoundException(id);
+		}
+
 	}
 
 	public Utente findByEmail(String email) {

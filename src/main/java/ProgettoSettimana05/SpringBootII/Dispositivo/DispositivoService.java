@@ -15,7 +15,7 @@ public class DispositivoService {
 	@Autowired
 	DispositivoRepository dispositivoRepo;
 
-	public Dispositivo create(DispositivoRequestPayload body) {
+	public Dispositivo checkAndCreate(DispositivoRequestPayload body) {
 		if (body.getStatoDispositivo().equals(StatoDispositivo.ASSEGNATO)
 				|| body.getStatoDispositivo().equals(StatoDispositivo.DISMESSO)
 				|| body.getStatoDispositivo().equals(StatoDispositivo.IN_MANUTENZIONE)) {

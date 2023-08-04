@@ -3,11 +3,11 @@ package ProgettoSettimana05.SpringBootII.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import ProgettoSettimana05.SpringBootII.Exception.UnauthorizedException;
 import ProgettoSettimana05.SpringBootII.Utente.Utente;
@@ -16,7 +16,7 @@ import ProgettoSettimana05.SpringBootII.Utente.UtenteLoginSuccessful;
 import ProgettoSettimana05.SpringBootII.Utente.UtenteRequestPayload;
 import ProgettoSettimana05.SpringBootII.Utente.UtenteService;
 
-@Controller
+@RestController
 @RequestMapping("/auth")
 public class AuthController {
 	@Autowired
@@ -34,7 +34,8 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<UtenteLoginSuccessful> login(@RequestBody UtenteLoginPayload body) {
+	public ResponseEntity<UtenteLoginSuccessful> login(@RequestBody UtenteLoginPayload body)
+			throws UnauthorizedException {
 
 
 		Utente user = usersService.findByEmail(body.getEmail());
