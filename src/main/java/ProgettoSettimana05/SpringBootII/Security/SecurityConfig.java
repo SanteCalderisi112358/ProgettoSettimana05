@@ -43,10 +43,7 @@ public class SecurityConfig {
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/utenti/**").authenticated());
-		/*
-		 * // * dobbiamo richiedere l'autorizzazione anche per tutte le eventuali altre
-		 * // * entità //
-		 */
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/dispositivi/**").authenticated());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll());
 
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

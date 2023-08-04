@@ -54,7 +54,7 @@ public class MainRunner implements CommandLineRunner {
 //					.nextInt(StatoDispositivo.values().length)];
 //			Utente utente = listaUtenti.get(faker.number().numberBetween(0, listaUtenti.size() - 1));
 //			DispositivoRequestPayload nuovoDispositivo = new DispositivoRequestPayload(nome, marca, tipoDispositivo,
-//					statoDispositivo, utente);
+//					statoDispositivo, utente.getId());
 //			try {
 //				dispositivoSrv.checkAndCreate(nuovoDispositivo);
 //			} catch (NotFoundDispositivoException e) {
@@ -72,7 +72,7 @@ public class MainRunner implements CommandLineRunner {
 //					.nextInt(StatoDispositivo.values().length)];
 //			Utente utente = listaUtenti.get(faker.number().numberBetween(0, listaUtenti.size() - 1));
 //			DispositivoRequestPayload nuovoDispositivo = new DispositivoRequestPayload(nome, marca, tipoDispositivo,
-//					statoDispositivo, utente);
+//					statoDispositivo, utente.getId());
 //			try {
 //				dispositivoSrv.checkAndCreate(nuovoDispositivo);
 //			} catch (NotFoundDispositivoException e) {
@@ -88,7 +88,7 @@ public class MainRunner implements CommandLineRunner {
 //					.nextInt(StatoDispositivo.values().length)];
 //			Utente utente = listaUtenti.get(faker.number().numberBetween(0, listaUtenti.size() - 1));
 //			DispositivoRequestPayload nuovoDispositivo = new DispositivoRequestPayload(nome, marca, tipoDispositivo,
-//					statoDispositivo, utente);
+//					statoDispositivo, utente.getId());
 //			try {
 //				dispositivoSrv.checkAndCreate(nuovoDispositivo);
 //			} catch (NotFoundDispositivoException e) {

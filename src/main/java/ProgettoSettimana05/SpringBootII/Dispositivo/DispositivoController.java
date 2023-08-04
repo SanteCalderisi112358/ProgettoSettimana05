@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,14 +16,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import ProgettoSettimana05.SpringBootII.Exception.DeleteDispositivoImpossibileRelazioneDispositivoException;
+import ProgettoSettimana05.SpringBootII.Utente.NotUtenteFoundException;
+import ProgettoSettimana05.SpringBootII.Utente.Utente;
+import ProgettoSettimana05.SpringBootII.Utente.UtenteService;
 
 @RestController
 @RequestMapping("/dispositivi")
 public class DispositivoController {
 	@Autowired
 	DispositivoService dispositivoSrv;
-
+	@Autowired
+	UtenteService utenteSrv;
 	@GetMapping
 	public Page<Dispositivo> getUtenti(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sortBy) {
@@ -35,19 +39,39 @@ public class DispositivoController {
 
 	}
 
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public Dispositivo saveDispositivo(@RequestBody DispositivoRequestPayload body)
+			throws NotUtenteFoundException {
+		Utente utente = utenteSrv.findById(body.getUtente());
+		if (utente != null) {
+			Dispositivo nuovoDispositivo = dispositivoSrv.checkAndCreate(body);
+			return nuovoDispositivo;
+		} else {
+			throw new NotUtenteFoundException(body.getUtente());
+		}
+
+
+	}
+
 	@PutMapping("/{id}")
-	public Dispositivo updateDispositivo(@PathVariable UUID id, @RequestBody DispositivoRequestPayload body) {
-		return dispositivoSrv.findByIdAndUpdate(id, body);
+	public Dispositivo updateDispositivo(@PathVariable UUID id, @RequestBody DispositivoRequestPayload body)
+			throws NotUtenteFoundException {
+		Utente utente = utenteSrv.findById(body.getUtente());
+		if (utente != null) {
+			return dispositivoSrv.findByIdAndUpdate(id, body);
+		} else {
+			throw new NotUtenteFoundException(body.getUtente());
+		}
+
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteDispositivo(@PathVariable UUID id) {
-		try {
+
 			dispositivoSrv.findByIdAndDelete(id);
-		} catch (DeleteDispositivoImpossibileRelazioneDispositivoException ex) {
-			System.err.println(ex.getMessage());
-		}
+
 
 	}
 }

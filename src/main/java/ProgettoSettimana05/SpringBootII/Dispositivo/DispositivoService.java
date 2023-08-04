@@ -10,11 +10,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import ProgettoSettimana05.SpringBootII.Exception.DeleteDispositivoImpossibileRelazioneDispositivoException;
+import ProgettoSettimana05.SpringBootII.Utente.NotUtenteFoundException;
+import ProgettoSettimana05.SpringBootII.Utente.Utente;
+import ProgettoSettimana05.SpringBootII.Utente.UtenteService;
+
 @Service
 public class DispositivoService {
 	@Autowired
 	DispositivoRepository dispositivoRepo;
-
+	@Autowired
+	UtenteService utenteSrv;
 	public Dispositivo checkAndCreate(DispositivoRequestPayload body) {
 		if (body.getStatoDispositivo().equals(StatoDispositivo.ASSEGNATO)
 				|| body.getStatoDispositivo().equals(StatoDispositivo.DISMESSO)
@@ -22,10 +28,11 @@ public class DispositivoService {
 			throw new NotFoundDispositivoException(
 					"Il dispositivo è " + body.getStatoDispositivo() + " e non è assegnabile al dipendente");
 		} else {
+			Utente utente = utenteSrv.findById(body.getUtente());
 			Dispositivo nuovoDispositivo = new Dispositivo(body.getNome(), body.getMarca(), body.getTipoDispositivo(),
-					StatoDispositivo.ASSEGNATO, body.getUtente());
+					StatoDispositivo.ASSEGNATO, utente);
 			System.err.println(
-					"Il disposito " + body.getNome() + " è stato assegnato al dipendente " + body.getUtente().getId()
+					"Il disposito " + body.getNome() + " è stato assegnato al dipendente " + body.getUtente()
 							+ ".\nLo stato del dispositivo è passato da 'DISPONIBILE' a 'ASSEGNATO'");
 			return dispositivoRepo.save(nuovoDispositivo);
 		}
@@ -42,20 +49,35 @@ public class DispositivoService {
 		return dispositivoRepo.findAll();
 	}
 
-	public Dispositivo findById(UUID id) throws NotFoundDispositivoException {
+	public Dispositivo findById(UUID id)
+			throws NotFoundDispositivoException, DeleteDispositivoImpossibileRelazioneDispositivoException {
 		return dispositivoRepo.findById(id).orElseThrow(() -> new NotFoundDispositivoException(id));
 	}
 
-	public Dispositivo findByIdAndUpdate(UUID id, DispositivoRequestPayload body) throws NotFoundDispositivoException {
+	public Dispositivo findByIdAndUpdate(UUID id, DispositivoRequestPayload body)
+			throws NotFoundDispositivoException, NotUtenteFoundException {
 		Dispositivo found = this.findById(id);
-		found.setNome(body.getNome());
+		if (found != null) {
+
+			Utente utente = utenteSrv.findById(body.getUtente());
+			if (utente != null) {
+				found.setNome(body.getNome());
 		found.setMarca(body.getMarca());
 		found.setStatoDispositivo(body.getStatoDispositivo());
 		found.setTipoDispositivo(body.getTipoDispositivo());
-		found.setUtente(body.getUtente());
-
+		found.setUtente(utente);
 		return dispositivoRepo.save(found);
+	} else {
+		throw new NotUtenteFoundException(body.getUtente());
 	}
+
+} else {
+	throw new NotFoundDispositivoException(id);
+}
+
+	}
+
+
 
 	public void findByIdAndDelete(UUID id) throws NotFoundDispositivoException {
 		Dispositivo found = this.findById(id);

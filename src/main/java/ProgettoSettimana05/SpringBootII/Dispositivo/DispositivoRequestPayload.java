@@ -1,6 +1,6 @@
 package ProgettoSettimana05.SpringBootII.Dispositivo;
 
-import ProgettoSettimana05.SpringBootII.Utente.Utente;
+import java.util.UUID;
 
 public class DispositivoRequestPayload {
 
@@ -8,10 +8,10 @@ public class DispositivoRequestPayload {
 	private String marca;
 	private TipoDispositivo tipoDispositivo;
 	private StatoDispositivo statoDispositivo;
-	private Utente utente;
+	private UUID utente;
 
 	public DispositivoRequestPayload(String nome, String marca, TipoDispositivo tipoDispositivo,
-			StatoDispositivo statoDispositivo, Utente utente) {
+			StatoDispositivo statoDispositivo, UUID utente) {
 
 		this.nome = nome;
 		this.marca = marca;
@@ -20,11 +20,11 @@ public class DispositivoRequestPayload {
 		this.utente = utente;
 	}
 
-	public Utente getUtente() {
+	public UUID getUtente() {
 		return utente;
 	}
 
-	public void setUtente(Utente utente) {
+	public void setUtente(UUID utente) {
 		this.utente = utente;
 	}
 	public String getNome() {
