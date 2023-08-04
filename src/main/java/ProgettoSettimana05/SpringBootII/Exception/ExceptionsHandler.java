@@ -40,13 +40,7 @@ public class ExceptionsHandler {
 		return new ErrorsPayload(e.getMessage(), new Date());
 	}
 
-	@ExceptionHandler(Exception.class)
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public ErrorsPayload handleGeneric(Exception e) {
-		log.error(e.getMessage());
-		e.printStackTrace();
-		return new ErrorsPayload("Errore generico, risolveremo il prima possibile", new Date());
-	}
+
 
 	@ExceptionHandler(DeleteUtenteImpossibileRelazioneDispositivoException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -56,5 +50,11 @@ public class ExceptionsHandler {
 		return new ErrorsPayload(ex.getMessage(), new Date());
 	}
 
-
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ErrorsPayload handleGeneric(Exception e) {
+		log.error(e.getMessage());
+		e.printStackTrace();
+		return new ErrorsPayload("Errore generico, risolveremo il prima possibile", new Date());
+	}
 }

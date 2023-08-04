@@ -55,15 +55,11 @@ public class DispositivoController {
 	}
 
 	@PutMapping("/{id}")
-	public Dispositivo updateDispositivo(@PathVariable UUID id, @RequestBody DispositivoRequestPayload body)
-			throws NotUtenteFoundException {
-		Utente utente = utenteSrv.findById(body.getUtente());
-		if (utente != null) {
+	public Dispositivo updateDispositivo(@PathVariable UUID id, @RequestBody DispositivoRequestPayload body) {
+		
+		
 			return dispositivoSrv.findByIdAndUpdate(id, body);
-		} else {
-			throw new NotUtenteFoundException(body.getUtente());
-		}
-
+		
 	}
 
 	@DeleteMapping("/{id}")

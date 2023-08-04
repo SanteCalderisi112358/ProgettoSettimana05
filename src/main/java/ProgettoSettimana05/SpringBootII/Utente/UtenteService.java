@@ -10,8 +10,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import ProgettoSettimana05.SpringBootII.Dispositivo.Dispositivo;
+import ProgettoSettimana05.SpringBootII.Dispositivo.DispositivoRepository;
+import ProgettoSettimana05.SpringBootII.Dispositivo.StatoDispositivo;
+import ProgettoSettimana05.SpringBootII.Exception.BadRequestException;
+import ProgettoSettimana05.SpringBootII.Exception.DeleteUtenteImpossibileRelazioneDispositivoException;
+
 @Service
 public class UtenteService {
+
+	@Autowired
+	DispositivoRepository dispositivoRepo;
 	private final UtenteRepository utenteRepo;
 
 	@Autowired
@@ -21,10 +30,10 @@ public class UtenteService {
 	}
 
 	public Utente create(UtenteRequestPayload body) {
-		// check if email already in use
-//		utenteRepo.findByEmail(body.getEmail()).ifPresent(user -> {
-//			throw new BadRequestException("L'email è già stata utilizzata");
-//		});
+
+		utenteRepo.findByEmail(body.getEmail()).ifPresent(user -> {
+			throw new BadRequestException("E-mail già in uso. Registrarsi con un'altra e-mail");
+		});
 		Utente newUser = new Utente(body.getNome(), body.getCognome(), body.getUsername(), body.getEmail(),
 				body.getPassword());
 		return utenteRepo.save(newUser);
@@ -56,9 +65,20 @@ public class UtenteService {
 		return utenteRepo.save(found);
 	}
 
-	public void findByIdAndDelete(UUID id) throws NotUtenteFoundException {
+	public void findByIdAndDelete(UUID id)
+			throws NotUtenteFoundException, DeleteUtenteImpossibileRelazioneDispositivoException {
 		Utente found = this.findById(id);
+
 		if (found != null) {
+
+			List<Dispositivo> dispositiviAssociati = dispositivoRepo.findByUtente(found);
+			dispositiviAssociati.forEach(dispositivo -> {
+				dispositivo.setStatoDispositivo(StatoDispositivo.DISPONIBILE);
+				dispositivo.setUtente(null);
+				dispositivoRepo.save(dispositivo);
+
+			});
+
 			utenteRepo.delete(found);
 		} else {
 			throw new NotUtenteFoundException(id);
