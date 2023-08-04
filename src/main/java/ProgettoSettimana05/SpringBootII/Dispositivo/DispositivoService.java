@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import ProgettoSettimana05.SpringBootII.Exception.DeleteDispositivoImpossibileRelazioneDispositivoException;
 import ProgettoSettimana05.SpringBootII.Utente.NotUtenteFoundException;
 import ProgettoSettimana05.SpringBootII.Utente.Utente;
+import ProgettoSettimana05.SpringBootII.Utente.UtenteRepository;
 import ProgettoSettimana05.SpringBootII.Utente.UtenteService;
 
 @Service
@@ -21,6 +22,8 @@ public class DispositivoService {
 	DispositivoRepository dispositivoRepo;
 	@Autowired
 	UtenteService utenteSrv;
+	@Autowired
+	UtenteRepository utenteRepo;
 	public Dispositivo checkAndCreate(DispositivoRequestPayload body) {
 		if (body.getStatoDispositivo().equals(StatoDispositivo.ASSEGNATO)
 				|| body.getStatoDispositivo().equals(StatoDispositivo.DISMESSO)
@@ -77,7 +80,22 @@ public class DispositivoService {
 
 	}
 
+	public void removeDispositivoFromUtente(UUID idDispositivo)
+			throws NotFoundDispositivoException, NotUtenteFoundException {
+		Dispositivo dispositivo = this.findById(idDispositivo);
+		if (dispositivo != null) {
+			Utente utente = utenteSrv.findById(dispositivo.getUtente().getId());
+			dispositivo.setUtente(null);
+			dispositivo.setStatoDispositivo(StatoDispositivo.DISPONIBILE);
 
+			
+			dispositivoRepo.save(dispositivo);
+			System.err.println(dispositivo.toString() + " è stato tolto sottratto a " + utente.toString()
+					+ " e il suo stato è passato da 'ASSEGNATO' a 'DISPONIBILE'");
+		} else {
+			throw new NotFoundDispositivoException(idDispositivo);
+		}
+	}
 
 	public void findByIdAndDelete(UUID id) throws NotFoundDispositivoException {
 		Dispositivo found = this.findById(id);

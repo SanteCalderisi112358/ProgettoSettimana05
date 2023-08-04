@@ -70,4 +70,12 @@ public class DispositivoController {
 
 
 	}
+
+	@DeleteMapping("/rimuovi/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteDispositivoFromUtente(@PathVariable UUID id) {
+
+		dispositivoSrv.removeDispositivoFromUtente(id);
+
+	}
 }

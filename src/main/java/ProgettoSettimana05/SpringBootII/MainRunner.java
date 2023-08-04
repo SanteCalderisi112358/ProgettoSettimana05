@@ -2,6 +2,7 @@ package ProgettoSettimana05.SpringBootII;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Component;
 import com.github.javafaker.Faker;
 
 import ProgettoSettimana05.SpringBootII.Dispositivo.DispositivoService;
+import ProgettoSettimana05.SpringBootII.Dispositivo.NotFoundDispositivoException;
+import ProgettoSettimana05.SpringBootII.Utente.NotUtenteFoundException;
 import ProgettoSettimana05.SpringBootII.Utente.Utente;
 import ProgettoSettimana05.SpringBootII.Utente.UtenteService;
 
@@ -95,7 +98,15 @@ public class MainRunner implements CommandLineRunner {
 //				System.err.println(e.getMessage());
 //			}
 //		}
+		/* METODO PER ELIMINARE ASSEGNAZIONE DI UN DISPOSITIVO DA UN DIPENDENTE */
+		try {
+			dispositivoSrv.removeDispositivoFromUtente(UUID.fromString("3910c811-5ca6-4b45-9344-277706384b46"));
 
+		} catch (NotFoundDispositivoException ex) {
+			System.err.println(ex.getMessage());
+		} catch (NotUtenteFoundException ex) {
+			System.err.println(ex.getMessage());
+		}
 
 	}
 
