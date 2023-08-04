@@ -100,7 +100,7 @@ public class MainRunner implements CommandLineRunner {
 //		}
 		/* METODO PER ELIMINARE ASSEGNAZIONE DI UN DISPOSITIVO DA UN DIPENDENTE */
 		try {
-			dispositivoSrv.removeDispositivoFromUtente(UUID.fromString("3910c811-5ca6-4b45-9344-277706384b46"));
+			dispositivoSrv.removeDispositivoFromUtente(UUID.fromString("208e30ad-c711-4108-a231-36d9daf523d8"));
 
 		} catch (NotFoundDispositivoException ex) {
 			System.err.println(ex.getMessage());
